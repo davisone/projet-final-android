@@ -2,16 +2,20 @@ package fr.sdv.b3dev.evan.projet_final.data.local.database.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
+import androidx.room.Embedded
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import fr.sdv.b3dev.evan.projet_final.data.local.database.entity.CartItemEntity
 import fr.sdv.b3dev.evan.projet_final.data.local.database.entity.SneakerEntity
 import kotlinx.coroutines.flow.Flow
 
 data class CartItemWithSneaker(
+    @Embedded(prefix = "cart_")
     val cartItem: CartItemEntity,
+    @Embedded(prefix = "sneaker_")
     val sneaker: SneakerEntity
 )
 
@@ -21,8 +25,27 @@ interface CartDao {
     @Query("SELECT * FROM cart_items WHERE userId = :userId ORDER BY addedAt DESC")
     fun getCartItems(userId: Long): Flow<List<CartItemEntity>>
 
+    @Transaction
     @Query("""
-        SELECT c.*, s.* FROM cart_items c
+        SELECT
+            c.id AS cart_id,
+            c.sneakerId AS cart_sneakerId,
+            c.userId AS cart_userId,
+            c.size AS cart_size,
+            c.quantity AS cart_quantity,
+            c.addedAt AS cart_addedAt,
+            s.id AS sneaker_id,
+            s.name AS sneaker_name,
+            s.brand AS sneaker_brand,
+            s.description AS sneaker_description,
+            s.price AS sneaker_price,
+            s.imageUrl AS sneaker_imageUrl,
+            s.releaseDate AS sneaker_releaseDate,
+            s.isUpcoming AS sneaker_isUpcoming,
+            s.colorway AS sneaker_colorway,
+            s.sizes AS sneaker_sizes,
+            s.barcode AS sneaker_barcode
+        FROM cart_items c
         INNER JOIN sneakers s ON c.sneakerId = s.id
         WHERE c.userId = :userId
         ORDER BY c.addedAt DESC
