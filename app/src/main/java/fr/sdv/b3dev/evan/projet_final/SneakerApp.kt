@@ -1,6 +1,7 @@
 package fr.sdv.b3dev.evan.projet_final
 
 import android.app.Application
+import android.content.pm.ApplicationInfo
 import fr.sdv.b3dev.evan.projet_final.util.Logger
 import timber.log.Timber
 
@@ -10,7 +11,8 @@ class SneakerApp : Application() {
         super.onCreate()
 
         // Initialisation de Timber pour le logging
-        if (BuildConfig.DEBUG) {
+        val isDebuggable = (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0
+        if (isDebuggable) {
             Timber.plant(Timber.DebugTree())
         }
 
