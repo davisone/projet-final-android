@@ -7,7 +7,9 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import fr.sdv.b3dev.evan.projet_final.camera.CameraMode
 import fr.sdv.b3dev.evan.projet_final.ui.screens.cart.CartScreen
+import fr.sdv.b3dev.evan.projet_final.ui.screens.camera.CameraScreen
 import fr.sdv.b3dev.evan.projet_final.ui.screens.detail.SneakerDetailScreen
 import fr.sdv.b3dev.evan.projet_final.ui.screens.favorites.FavoritesScreen
 import fr.sdv.b3dev.evan.projet_final.ui.screens.home.HomeScreen
@@ -45,6 +47,9 @@ fun SneakerNavGraph(
             SearchScreen(
                 onSneakerClick = { sneakerId ->
                     navController.navigate(Screen.Detail.createRoute(sneakerId))
+                },
+                onOpenScanner = {
+                    navController.navigate(Screen.Camera.createRoute(CameraMode.SCAN.value))
                 }
             )
         }
@@ -57,7 +62,10 @@ fun SneakerNavGraph(
         }
         composable(Screen.Profile.route) {
             ProfileScreen(
-                onGoToCart = { navController.navigate(Screen.Cart.route) }
+                onGoToCart = { navController.navigate(Screen.Cart.route) },
+                onOpenCamera = {
+                    navController.navigate(Screen.Camera.createRoute(CameraMode.PROFILE.value))
+                }
             )
         }
         composable(Screen.Cart.route) {
@@ -76,6 +84,20 @@ fun SneakerNavGraph(
             SneakerDetailScreen(
                 sneakerId = sneakerId,
                 onGoToCart = { navController.navigate(Screen.Cart.route) }
+            )
+        }
+        composable(
+            route = Screen.Camera.route,
+            arguments = listOf(navArgument("mode") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val modeArg = backStackEntry.arguments?.getString("mode")
+            CameraScreen(
+                modeArg = modeArg,
+                onClose = { navController.popBackStack() },
+                onSneakerFound = { sneakerId ->
+                    navController.popBackStack()
+                    navController.navigate(Screen.Detail.createRoute(sneakerId))
+                }
             )
         }
     }

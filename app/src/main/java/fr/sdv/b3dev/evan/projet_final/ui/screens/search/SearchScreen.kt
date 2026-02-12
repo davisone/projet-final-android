@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,6 +22,7 @@ import fr.sdv.b3dev.evan.projet_final.util.Logger
 @Composable
 fun SearchScreen(
     onSneakerClick: (Long) -> Unit,
+    onOpenScanner: () -> Unit,
     viewModel: SearchViewModel = viewModel()
 ) {
     val query by viewModel.query.collectAsState()
@@ -47,6 +49,15 @@ fun SearchScreen(
                     Logger.VoiceSearch.started()
                 }
             )
+        }
+
+        item {
+            Button(
+                onClick = onOpenScanner,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            ) {
+                Text("Scanner un code-barres")
+            }
         }
 
         if (results.isEmpty()) {

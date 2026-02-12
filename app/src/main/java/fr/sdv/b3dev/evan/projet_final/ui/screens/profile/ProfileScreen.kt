@@ -16,14 +16,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
 
 @Composable
 fun ProfileScreen(
     onGoToCart: () -> Unit,
+    onOpenCamera: () -> Unit,
     viewModel: ProfileViewModel = viewModel()
 ) {
     val user by viewModel.user.collectAsState()
@@ -55,6 +59,18 @@ fun ProfileScreen(
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+                if (!user?.profileImagePath.isNullOrBlank()) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    AsyncImage(
+                        model = user?.profileImagePath,
+                        contentDescription = "Photo de profil",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(180.dp)
+                            .clip(MaterialTheme.shapes.medium),
+                        contentScale = ContentScale.Crop
+                    )
+                }
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = "Depense totale: ${"%.2f".format(totalSpent)} €",
@@ -62,6 +78,9 @@ fun ProfileScreen(
                 )
                 Button(onClick = onGoToCart, modifier = Modifier.padding(top = 8.dp)) {
                     Text("Voir le panier")
+                }
+                Button(onClick = onOpenCamera, modifier = Modifier.padding(top = 8.dp)) {
+                    Text("Photo de profil")
                 }
             }
         }
