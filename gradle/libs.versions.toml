@@ -11,7 +11,7 @@ composeBom = "2024.09.00"
 
 # Nouvelles dépendances
 ksp = "2.0.21-1.0.28"
-room = "2.6.1"
+room = "2.7.2"
 navigationCompose = "2.8.4"
 cameraX = "1.4.0"
 mlkitBarcode = "17.3.0"
@@ -68,4 +68,3 @@ androidx-compose-material-icons-extended = { group = "androidx.compose.material"
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
-
