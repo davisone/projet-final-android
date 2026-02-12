@@ -10,6 +10,7 @@ import androidx.navigation.navArgument
 import fr.sdv.b3dev.evan.projet_final.camera.CameraMode
 import fr.sdv.b3dev.evan.projet_final.ui.screens.cart.CartScreen
 import fr.sdv.b3dev.evan.projet_final.ui.screens.camera.CameraScreen
+import fr.sdv.b3dev.evan.projet_final.ui.screens.checkout.CheckoutScreen
 import fr.sdv.b3dev.evan.projet_final.ui.screens.detail.SneakerDetailScreen
 import fr.sdv.b3dev.evan.projet_final.ui.screens.favorites.FavoritesScreen
 import fr.sdv.b3dev.evan.projet_final.ui.screens.home.HomeScreen
@@ -70,9 +71,20 @@ fun SneakerNavGraph(
         }
         composable(Screen.Cart.route) {
             CartScreen(
-                onGoToCheckout = { },
+                onGoToCheckout = { navController.navigate(Screen.Checkout.route) },
                 onSneakerClick = { sneakerId ->
                     navController.navigate(Screen.Detail.createRoute(sneakerId))
+                }
+            )
+        }
+        composable(Screen.Checkout.route) {
+            CheckoutScreen(
+                onBack = { navController.popBackStack() },
+                onPaymentSuccess = { _ ->
+                    navController.navigate(Screen.Profile.route) {
+                        popUpTo(Screen.Cart.route) { inclusive = true }
+                        launchSingleTop = true
+                    }
                 }
             )
         }
